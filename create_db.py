@@ -48,7 +48,7 @@ def create_db():
         );
         CREATE TABLE IF NOT EXISTS ce AS SELECT * FROM theme;
         CREATE TABLE IF NOT EXISTS pres AS SELECT * FROM theme;
-        CREATE TABLE IF NOT EXISTS sweeps(
+        CREATE TABLE IF NOT EXISTS overall(
             id INTEGER PRIMARY KEY REFERENCES players(id),
             g1 INTEGER DEFAULT 0,
             g2 INTEGER DEFAULT 0,
