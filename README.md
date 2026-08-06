@@ -9,9 +9,9 @@ The overall database design is shown below.
     erDiagram
         players{
             integer id PK
-            string first_name
-            string last_name
-            string division
+            text first_name
+            text last_name
+            text division
         }
         onsets{
             integer id PK,FK
@@ -105,3 +105,19 @@ Same as Onsets, Equations and Ling tables, but with a `scaled_total` column to s
 
 #### Overall
 Calculates the best game score from each subject area + next highest separately and also store the total combined score.
+
+
+## TO-DO
+***
+- [ ] Create Registration System 
+  - [ ] Drop-down for GUI version
+- [x] Implement Database 
+- [ ] Create CSV/PDF generator for scores
+  - [ ] Auto-sort by division
+- [ ] Terminal based system
+  - [ ] GUI version
+    - [ ] Auto updating score viewer?
+    - [ ] Tabs to switch between score input and registration
+- [ ] Score Calculation System
+  - [ ] Auto calculating scores
+  - [ ] Dynamic scaling reading games
