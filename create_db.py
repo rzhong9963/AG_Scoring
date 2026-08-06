@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
+# Create DB connection
 def create_conn(db):
     conn = None
     try:
@@ -9,6 +10,7 @@ def create_conn(db):
         print(e)
     return conn
 
+# Execute SQL statements to create tables
 def create_tables(conn, sql):
     try:
         c = conn.cursor()
@@ -16,6 +18,7 @@ def create_tables(conn, sql):
     except Error as e:
         print(e)
 
+# Create db connection and then create tables for scores and players
 def create_db():
     db = "scores.db"
     conn = create_conn(db)
@@ -58,6 +61,7 @@ def create_db():
         );
         """
         create_tables(conn, tables)
+        conn.close()
     else:
         print("Error connecting to the database")
     return db

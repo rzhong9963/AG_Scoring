@@ -4,7 +4,7 @@ Recreation of scoring system used in Academic Games. Currently designed for loca
 
 ## Database Schema
 ***
-The overall database design is shown below. 
+The overall database design is shown below. The actual column names may differ, but the structure is the same overall.
 ```mermaid
     erDiagram
         players{
