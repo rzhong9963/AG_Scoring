@@ -20,7 +20,7 @@ def close_conn(conn):
 # Add player and print ID after
 def register(fname, lname, div):
     insert = """
-    INSERT INTO players(fname, lname, division) VALUES (?, ?, ?)
+        INSERT INTO players(fname, lname, division) VALUES (?, ?, ?)
     """
     conn = create_conn()
     cur = conn.cursor()
@@ -58,7 +58,7 @@ def get_id(fname, lname):
     conn = create_conn()
     cur = conn.cursor()
     id = cur.execute(search, (fname, lname)).fetchone()[0]
-    cur.close()
+    conn.close()
     return id
 
 # Returns player name from ID
@@ -74,6 +74,7 @@ def get_player(id):
     return player_name_str
 
 # Update round score for player
+# Find a way to maybe use games as a variable instead of match like rounds
 def update_score(score, id, round, game):
     match game:
         # On-Sets
@@ -113,12 +114,16 @@ def update_score(score, id, round, game):
             """.format(round="r"+str(round))
     conn = create_conn()
     cur = conn.cursor()
+    cur.execute(update, (score, id))
+    conn.commit()
+    conn.close()
 
 # Update totals
 def update_totals():
     pass
 
 # Get player score for a specific game based on ID
+# Same as updating score. Find a way to maybe use game as a variable instead of match statement
 def get_score(id, game):
     match game:
         # On-Sets
@@ -139,24 +144,22 @@ def get_score(id, game):
         # Current Events
         case game if game.upper() == "C":
             score = """
-                SELECT total FROM ce WHERE id = ?
+                SELECT total, scaled FROM ce WHERE id = ?
             """
         # Theme
         case game if game.upper() == "T":
             score = """
-                SELECT total FROM theme WHERE id = ?
+                SELECT total, scaled FROM theme WHERE id = ?
             """
         # Prop
         case game if game.upper() == "P":
             score = """
-                SELECT total FROM prop WHERE id = ?
+                SELECT total, scaled FROM prop WHERE id = ?
             """
         # Pres
         case game if game.upper() == "R":
             score = """
-                SELECT total FROM pres WHERE id = ?
+                SELECT total, scaled FROM pres WHERE id = ?
             """
-
-# Get total scores for a player
-def overall_score(id):
-    pass
+    conn = create_conn()
+    cur = conn.cursor()

@@ -26,7 +26,9 @@ import create_db
         R = Pres
 """
 
-
+def main_menu():
+    print()
 
 if __name__ == '__main__':
     create_db.create_db()
+    main_menu()
