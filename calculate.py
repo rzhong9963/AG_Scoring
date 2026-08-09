@@ -61,15 +61,94 @@ def scaled(game):
 # Gets higher score between the two games in each category and gets the next highest by using the min from each category
 # and getting the max from the remaining ones
 def overall_scores():
-    overall_score = 0
     conn = db_utils.create_conn()
     cur = conn.cursor()
-    # Stores the lower unused score for comparison later
-    math_min = 0
-    lang_min = 0
-    social_min = 0
+    # Stores score values
+    math_min = {}
+    lang_min = {}
+    social_min = {}
+    math_max = {}
+    lang_max = {}
+    social_max = {}
+    other = {}
+    theme_score = {}
+    overall = """
+        UPDATE overall SET game1 = ?, game2 = ?, game3 = ?, game4 = ?, total = ? WHERE id = ?
+    """
     # Math game comparisons | OS and EQ
-
+    onsets = """
+        SELECT id, total FROM onsets
+    """
+    equations = """
+        SELECT id, total FROM equations
+    """
+    os_scores = cur.execute(onsets).fetchall()
+    eq_scores = cur.execute(equations).fetchall()
+    for o in os_scores:
+        for e in eq_scores:
+            if o[0] == e[0]:
+                if o[1] > e[1]:
+                    math_max[o[0]] = o[1]
+                    math_min[e[0]] = e[1]
+                else:
+                    math_max[o[0]] = e[1]
+                    math_min[e[0]] = o[1]
+            continue
+        continue
     # Social Studies game comparisons | Pres and CE
-
+    pres = """
+        SELECT id, scaled FROM pres
+    """
+    ce = """
+        SELECT id, scaled FROM ce
+    """
+    pres_scores = cur.execute(pres).fetchall()
+    ce_scores = cur.execute(ce).fetchall()
+    for p in pres_scores:
+        for c in ce_scores:
+            if p[0] == c[0]:
+                if p[1] > c[1]:
+                    social_max[p[0]] = p[1]
+                    social_min[c[0]] = c[1]
+                else:
+                    social_max[p[0]] = c[1]
+                    social_min[c[0]] = p[1]
+            continue
+        continue
     # English game comparisons | Ling and Prop
+    ling = """
+        SELECT id, toal FROM ling
+    """
+    prop = """
+        SELECT id, scaled FROM prop
+    """
+    prop_scores = cur.execute(prop).fetchall()
+    ling_scores = cur.execute(ling).fetchall()
+    for p in prop_scores:
+        for l in ling_scores:
+            if p[0] == l[0]:
+                if p[1] > l[1]:
+                    lang_max[p[0]] = p[1]
+                    lang_min[l[0]] = l[1]
+                else:
+                    lang_max[p[0]] = l[1]
+                    lang_min[l[0]] = p[1]
+            continue
+        continue
+    # Comparison of remaining scores
+    theme = """
+        SELECT id, scaled FROM theme
+    """
+    theme_scores = cur.execute(theme).fetchall()
+    for t in theme_scores:
+        theme_score[t[0]] = t[1]
+    for k in theme_score:
+        other[k] = max(theme_score[k],math_min[k],lang_min[k],social_min[k])
+    scores = {}
+    for k in other:
+        scores[k] = (lang_max[k], math_max[k], social_max[k], other[k])
+        overall_score = sum(scores[k]),
+        scores[k] += (overall_score, k)
+        cur.execute(overall, (scores[k]))
+        conn.commit()
+    conn.close()

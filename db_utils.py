@@ -43,6 +43,19 @@ def register(fname, lname, div):
             cur.execute(insert, values)
             conn.commit()
             print(f"{fname} {lname}'s player ID is {get_id(fname, lname)}")
+    # Add player to game tables
+    games = [
+        "INSERT INTO onsets(id) VALUES (?);",
+        "INSERT INTO equations(id) VALUES (?);",
+        "INSERT INTO ling(id) VALUES (?);",
+        "INSERT INTO prop(id) VALUES (?);",
+        "INSERT INTO pres(id) VALUES (?);",
+        "INSERT INTO ce(id) VALUES (?);",
+        "INSERT INTO theme(id) VALUES (?);",
+        "INSERT INTO overall(id) VALUES (?);",
+    ]
+    for g in games:
+        cur.execute(g, (get_id(fname, lname),))
     conn.close()
 
 # Returns list of players by ID
@@ -163,3 +176,7 @@ def get_score(id, game):
             """
     conn = create_conn()
     cur = conn.cursor()
+    score = cur.execute(score, (id,)).fetchone()
+    conn.close()
+    # Returns a tuple since scaled score is included for reading games
+    return score
