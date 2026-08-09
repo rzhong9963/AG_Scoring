@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Error
+import logging
 
 # DB name
 db = "scores.db"
@@ -7,15 +8,12 @@ db = "scores.db"
 # Create DB connection
 def create_conn():
     conn = None
+    logging.basicConfig(level=logging.INFO)
     try:
         conn = sqlite3.connect(db)
     except Error as e:
-        print(e)
+        logging.INFO(e)
     return conn
-
-# Close DB connection
-def close_conn(conn):
-    conn.close()
 
 # Add player and print ID after
 def register(fname, lname, div):
@@ -180,3 +178,70 @@ def get_score(id, game):
     conn.close()
     # Returns a tuple since scaled score is included for reading games
     return score
+
+# Get all game scores for a single player
+def all_scores(id):
+    search = """
+        SELECT players.id, player.fname, player.lname, onsets.total, equations.total, ling.total, prop.total, 
+        prop.scaled, pres.total, pres.scaled, ce.total, ce.scaled, theme.total, theme.scaled  
+        FROM players 
+        INNER JOIN onsets ON players.id = onsets.id
+        INNER JOIN equations ON players.id = equations.id
+        INNER JOIN ling ON players.id = ling.id
+        INNER JOIN prop ON players.id = prop.id
+        INNER JOIN pres ON players.id = pres.id
+        INNER JOIN ce ON players.id = ce.id
+        INNER JOIN theme ON players.id = theme.id
+    """
+    conn = create_conn()
+    cur = conn.cursor()
+    result = cur.execute(search, (id,)).fetchone()
+    # Return tuple result
+    return result
+
+# Same as all_scores, but include each individual round
+def all_round_scores(id):
+    search = """
+        SELECT players.id, player.fname, player.lname, onsets.r1, onsets.r2, onsets.r3, onsets.r4, onsets.total, 
+        equations.r1, equations.r2, equations.r3, equations.r4, equations.total, ling.r1, ling.r2, ling.r3, ling.r4,
+        ling.total, prop.r1, prop.r2, prop.r3, prop.r4, prop.total, prop.scaled, pres.r1, pres.r2, pres.total, 
+        pres.scaled, ce.r1, ce.r2, ce.total, ce.scaled, theme.r1, theme.r2, theme.total, theme.scaled
+        FROM players 
+        INNER JOIN onsets ON players.id = onsets.id
+        INNER JOIN equations ON players.id = equations.id
+        INNER JOIN ling ON players.id = ling.id
+        INNER JOIN prop ON players.id = prop.id
+        INNER JOIN pres ON players.id = pres.id
+        INNER JOIN ce ON players.id = ce.id
+        INNER JOIN theme ON players.id = theme.id
+    """
+    conn = create_conn()
+    cur = conn.cursor()
+    result = cur.execute(search, (id,)).fetchone()
+    # Return tuple result
+    return result
+
+# All information for reporting purposes
+def all_info():
+    divisions = ["M", "J", "S"]
+    all_results = []
+    conn = create_conn()
+    cur = conn.cursor()
+    for d in divisions:
+        search = """
+            SELECT players.id, player.fname, player.lname, onsets.total, equations.total, ling.total, prop.total, 
+            prop.scaled, pres.total, pres.scaled, ce.total, ce.scaled, theme.total, theme.scaled 
+            FROM players 
+            INNER JOIN onsets ON players.id = onsets.id
+            INNER JOIN equations ON players.id = equations.id
+            INNER JOIN ling ON players.id = ling.id
+            INNER JOIN prop ON players.id = prop.id
+            INNER JOIN pres ON players.id = pres.id
+            INNER JOIN ce ON players.id = ce.id
+            INNER JOIN theme ON players.id = theme.id
+            WHERE players.division = {div}
+        """.format(div=d)
+        results = cur.execute(search).fetchall()
+        all_results.append(results)
+    # Returns list of tuples
+    return all_results

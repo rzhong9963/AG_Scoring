@@ -118,6 +118,6 @@ Calculates the best game score from each subject area + next highest separately 
   - [ ] GUI version
     - [ ] Auto updating score viewer?
     - [ ] Tabs to switch between score input and registration
-- [ ] Score Calculation System
+- [x] Score Calculation System
   - [ ] Auto calculating scores
-  - [ ] Dynamic scaling reading games
+  - [x] Dynamic scaling reading games
