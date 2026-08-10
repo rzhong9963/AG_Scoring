@@ -76,8 +76,8 @@ def get_scores():
           f"\nPropaganda Total: {scores[6]} | Scaled: {scores[7]}\nPresidents Total: {scores[8]} | Scaled: {scores[9]}"
           f"\nCurrent Events Total: {scores[10]}\nScaled: {scores[11]} \nTheme Total: {scores[12]} | Scaled: {scores[13]}")
     breakdown = input("Do you want individual round breakdowns? (Y/N): ")
-    match breakdown.casefold():
-        case "y":
+    match breakdown.upper():
+        case "Y":
             scores = db_utils.all_round_scores(player)
             os.system('cls' if os.name == 'nt' else 'clear')
             print("=======Score Breakdown by Rounds=======")
@@ -91,26 +91,43 @@ def get_scores():
                   f"Scaled: {scores[28]} \nCurrent Events: Round 1: {scores[29]} | Round 2: {scores[30]} | Total: "
                   f"{scores[31]} | Scaled: {scores[32]}\nTheme: Round 1: {scores[33]} | Round 2: {scores[34]} | Total: "
                   f"{scores[35]} | Scaled: {scores[36]}")
-        case "n":
+        case "N":
             main_menu()
 
 # Score Input
 def input_scores():
     os.system('cls' if os.name == 'nt' else 'clear')
-    print("=======Input Scores=======")
+    print("=======Score Input=======")
     print(f"Game Codes: {'O: On-Sets':20} {'E: Equations':20} {'L: LinguiSHTIK':20}"
           f"\n{'C: Current Events':20} {'T: Theme':15} {'P: Propaganda':20} {'R: Presidents':20}")
-    game, round = input("Enter Game Code and Round number").split()
+    game, round = input("Enter Game Code and Round number: ").split()
     while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("=======Score Input=======")
+        match game.upper():
+            case "O":
+                print(f"Current Game: On-Sets | Round {round}")
+            case "E":
+                print(f"Current Game: Equations | Round {round}")
+            case "L":
+                print(f"Current Game: LinguiSHTIK | Round {round}")
+            case "C":
+                print(f"Current Game: Current Events | Round {round}")
+            case "T":
+                print(f"Current Game: Theme | Round {round}")
+            case "P":
+                print(f"Current Game: Propaganda | Round {round}")
+            case "R":
+                print(f"Current Game: Presidents | Round {round}")
         id = int(input("Enter Player ID: "))
         print("Player: " + db_utils.get_player(id))
         score = int(input(f"Enter Round {round} Score: "))
         db_utils.update_score(score, id, round, game.upper())
         repeat = input("Enter scores for another player? (Y/N): ")
-        match repeat.casefold():
-            case "y":
-                input_scores()
-            case "n":
+        match repeat.upper():
+            case "Y":
+                continue
+            case "N":
                 db_utils.update_totals()
                 main_menu()
 
@@ -122,10 +139,10 @@ def register_player():
     div = input("Enter Division (M/J/S): ").upper()
     db_utils.register(fname, lname, div)
     cont = input("Do you want to register another player? (Y/N): ")
-    match cont.casefold():
-        case "y":
+    match cont.upper():
+        case "Y":
             register_player()
-        case "n":
+        case "N":
             main_menu()
 
 if __name__ == '__main__':

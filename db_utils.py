@@ -39,6 +39,7 @@ def register(fname, lname, div):
     ]
     for g in games:
         cur.execute(g, (get_id(fname, lname),))
+        conn.commit()
     conn.close()
 
 # Returns list of players by ID
@@ -179,20 +180,20 @@ def update_totals():
         ce_set = """
             UPDATE ce SET total = ? WHERE id = ?
         """
-        os_scores = cur.execute(os_get, (p,)).fetchone()
-        cur.execute(os_set, (os_scores[0]+os_scores[1]+os_scores[2]+os_scores[3],p,))
-        eq_scores = cur.execute(eq_get, (p,)).fetchone()
-        cur.execute(eq_set, (eq_scores[0]+eq_scores[1]+eq_scores[2]+eq_scores[3],p,))
-        ling_scores = cur.execute(ling_get, (p,)).fetchone()
-        cur.execute(ling_set, (ling_scores[0]+ling_scores[1]+ling_scores[2]+ling_scores[3],p,))
-        pres_scores = cur.execute(pres_get, (p,)).fetchone()
-        cur.execute(pres_set, (pres_scores[0]+pres_scores[1],p,))
-        prop_scores = cur.execute(prop_get, (p,)).fetchone()
-        cur.execute(prop_set, (prop_scores[0]+prop_scores[1]+prop_scores[2]+prop_scores[3],p,))
-        theme_scores = cur.execute(theme_get, (p,)).fetchone()
-        cur.execute(theme_set, (theme_scores[0]+theme_scores[1],p,))
-        ce_scores = cur.execute(ce_get, (p,)).fetchone()
-        cur.execute(ce_set, (ce_scores[0]+ce_scores[1],p,))
+        os_scores = cur.execute(os_get, (p[0],)).fetchone()
+        cur.execute(os_set, (os_scores[0]+os_scores[1]+os_scores[2]+os_scores[3],p[0],))
+        eq_scores = cur.execute(eq_get, (p[0],)).fetchone()
+        cur.execute(eq_set, (eq_scores[0]+eq_scores[1]+eq_scores[2]+eq_scores[3],p[0],))
+        ling_scores = cur.execute(ling_get, (p[0],)).fetchone()
+        cur.execute(ling_set, (ling_scores[0]+ling_scores[1]+ling_scores[2]+ling_scores[3],p[0],))
+        pres_scores = cur.execute(pres_get, (p[0],)).fetchone()
+        cur.execute(pres_set, (pres_scores[0]+pres_scores[1],p[0],))
+        prop_scores = cur.execute(prop_get, (p[0],)).fetchone()
+        cur.execute(prop_set, (prop_scores[0]+prop_scores[1]+prop_scores[2]+prop_scores[3],p[0],))
+        theme_scores = cur.execute(theme_get, (p[0],)).fetchone()
+        cur.execute(theme_set, (theme_scores[0]+theme_scores[1],p[0],))
+        ce_scores = cur.execute(ce_get, (p[0],)).fetchone()
+        cur.execute(ce_set, (ce_scores[0]+ce_scores[1],p[0],))
         for g in ["P", "R", "C", "T"]:
             calculate.scaled(g)
         calculate.overall_scores()

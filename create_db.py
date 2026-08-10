@@ -19,9 +19,12 @@ def create_tables(conn, sql):
         print(e)
 
 # Create db connection and then create tables for scores and players
+# CREATE TABLE IF NOT EXISTS <new> AS SELECT * FROM <old>; Creates NULL values instead.
+# Manually doing all columns individually works better
 def create_db():
     db = "scores.db"
     conn = create_conn(db)
+    conn.execute("PRAGMA foreign_keys = ON;")
     if conn is not None:
         tables = """
         CREATE TABLE IF NOT EXISTS players(
@@ -32,32 +35,65 @@ def create_db():
         );
         CREATE TABLE IF NOT EXISTS onsets(
             id INTEGER PRIMARY KEY REFERENCES players(id),
-            r1 INTEGER DEFAULT 0,
-            r2 INTEGER DEFAULT 0,
-            r3 INTEGER DEFAULT 0,
-            r4 INTEGER DEFAULT 0,
-            total INTEGER DEFAULT 0
+            r1 INTEGER NOT NULL DEFAULT 0,
+            r2 INTEGER NOT NULL DEFAULT 0,
+            r3 INTEGER NOT NULL DEFAULT 0,
+            r4 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0
         );
-        CREATE TABLE IF NOT EXISTS equations AS SELECT * FROM onsets;
-        CREATE TABLE IF NOT EXISTS ling AS SELECT * FROM onsets;
-        CREATE TABLE IF NOT EXISTS prop AS SELECT * FROM onsets;
-        ALTER TABLE prop ADD COLUMN scaled INTEGER DEFAULT 0;
+        CREATE TABLE IF NOT EXISTS equations(
+            id INTEGER PRIMARY KEY REFERENCES players(id),
+            r1 INTEGER NOT NULL DEFAULT 0,
+            r2 INTEGER NOT NULL DEFAULT 0,
+            r3 INTEGER NOT NULL DEFAULT 0,
+            r4 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0
+        );
+        CREATE TABLE IF NOT EXISTS ling(
+            id INTEGER PRIMARY KEY REFERENCES players(id),
+            r1 INTEGER NOT NULL DEFAULT 0,
+            r2 INTEGER NOT NULL DEFAULT 0,
+            r3 INTEGER NOT NULL DEFAULT 0,
+            r4 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0
+        );
+        CREATE TABLE IF NOT EXISTS prop(
+            id INTEGER PRIMARY KEY REFERENCES players(id),
+            r1 INTEGER NOT NULL DEFAULT 0,
+            r2 INTEGER NOT NULL DEFAULT 0,
+            r3 INTEGER NOT NULL DEFAULT 0,
+            r4 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0,
+            scaled INTEGER NOT NULL DEFAULT 0
+        );
         CREATE TABLE IF NOT EXISTS theme(
             id INTEGER PRIMARY KEY REFERENCES players(id),
-            r1 INTEGER DEFAULT 0,
-            r2 INTEGER DEFAULT 0,
-            total INTEGER DEFAULT 0,
-            scaled INTEGER DEFAULT 0
+            r1 INTEGER NOT NULL DEFAULT 0,
+            r2 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0,
+            scaled INTEGER NOT NULL DEFAULT 0
         );
-        CREATE TABLE IF NOT EXISTS ce AS SELECT * FROM theme;
-        CREATE TABLE IF NOT EXISTS pres AS SELECT * FROM theme;
+        CREATE TABLE IF NOT EXISTS ce(
+            id INTEGER PRIMARY KEY REFERENCES players(id),
+            r1 INTEGER NOT NULL DEFAULT 0,
+            r2 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0,
+            scaled INTEGER NOT NULL DEFAULT 0
+        );
+        CREATE TABLE IF NOT EXISTS pres(
+            id INTEGER PRIMARY KEY REFERENCES players(id),
+            r1 INTEGER NOT NULL DEFAULT 0,
+            r2 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0,
+            scaled INTEGER NOT NULL DEFAULT 0
+        );
         CREATE TABLE IF NOT EXISTS overall(
             id INTEGER PRIMARY KEY REFERENCES players(id),
-            g1 INTEGER DEFAULT 0,
-            g2 INTEGER DEFAULT 0,
-            g3 INTEGER DEFAULT 0,
-            g4 INTEGER DEFAULT 0,
-            total INTEGER DEFAULT 0
+            g1 INTEGER NOT NULL DEFAULT 0,
+            g2 INTEGER NOT NULL DEFAULT 0,
+            g3 INTEGER NOT NULL DEFAULT 0,
+            g4 INTEGER NOT NULL DEFAULT 0,
+            total INTEGER NOT NULL DEFAULT 0
         );
         """
         create_tables(conn, tables)
