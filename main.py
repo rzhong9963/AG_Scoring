@@ -57,7 +57,8 @@ def main_menu():
                     input_scores()
         case 3:
             os.system('cls' if os.name == 'nt' else 'clear')
-            generate_report.generate_csv()
+            # Since PDF also generates CSV
+#            generate_report.generate_csv()
             generate_report.generate_pdf()
             print("Results have been generated. All files located in the 'reports' folder.")
         case 4:

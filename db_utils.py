@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 import logging
+import calculate
 
 # DB name
 db = "scores.db"
@@ -42,7 +43,13 @@ def register(fname, lname, div):
 
 # Returns list of players by ID
 def get_players(div):
-    players = []
+    search = """
+        SELECT id, fname, lname FROM players WHERE division = ?
+    """
+    conn = create_conn()
+    cur = conn.cursor()
+    players = list(cur.execute(search, (div,)).fetchall())
+    conn.close()
     return players
 
 # Returns player ID from name
@@ -67,6 +74,17 @@ def get_player(id):
     conn.close()
     player_name_str = player_name[0] + " " + player_name[1]
     return player_name_str
+
+# Get all players without division separation
+def get_all_players():
+    search = """
+        SELECT id FROM players
+    """
+    conn = create_conn()
+    cur = conn.cursor()
+    players = cur.execute(search).fetchall()
+    conn.close()
+    return players
 
 # Update round score for player
 # Find a way to maybe use games as a variable instead of match like rounds
@@ -115,7 +133,69 @@ def update_score(score, id, round, game):
 
 # Update totals
 def update_totals():
-    pass
+    players = get_all_players()
+    conn = create_conn()
+    cur = conn.cursor()
+    for p in players:
+        os_get = """
+            SELECT r1, r2, r3, r4 FROM onsets WHERE id = ?
+        """
+        os_set = """
+            UPDATE onsets SET total = ? WHERE id = ?
+        """
+        eq_get = """
+            SELECT r1, r2, r3, r4 FROM equations WHERE id = ?
+        """
+        eq_set = """
+            UPDATE equations SET total = ? WHERE id = ?
+        """
+        ling_get = """
+            SELECT r1, r2, r3, r4 FROM ling WHERE id = ?
+        """
+        ling_set = """
+            UPDATE ling SET total = ? WHERE id = ?
+        """
+        pres_get = """
+            SELECT r1, r2 FROM pres WHERE id = ?
+        """
+        pres_set = """
+            UPDATE pres SET total = ? WHERE id = ?
+        """
+        prop_get = """
+            SELECT r1, r2, r3, r4 FROM prop WHERE id = ?
+        """
+        prop_set = """
+            UPDATE prop SET total = ? WHERE id = ?
+        """
+        theme_get = """
+            SELECT r1, r2 FROM theme WHERE id= ?
+        """
+        theme_set = """
+            UPDATE theme SET total = ? WHERE id = ?
+        """
+        ce_get = """
+            SELECT r1, r2 FROM ce WHERE id = ?
+        """
+        ce_set = """
+            UPDATE ce SET total = ? WHERE id = ?
+        """
+        os_scores = cur.execute(os_get, (p,)).fetchone()
+        cur.execute(os_set, (os_scores[0]+os_scores[1]+os_scores[2]+os_scores[3],p,))
+        eq_scores = cur.execute(eq_get, (p,)).fetchone()
+        cur.execute(eq_set, (eq_scores[0]+eq_scores[1]+eq_scores[2]+eq_scores[3],p,))
+        ling_scores = cur.execute(ling_get, (p,)).fetchone()
+        cur.execute(ling_set, (ling_scores[0]+ling_scores[1]+ling_scores[2]+ling_scores[3],p,))
+        pres_scores = cur.execute(pres_get, (p,)).fetchone()
+        cur.execute(pres_set, (pres_scores[0]+pres_scores[1],p,))
+        prop_scores = cur.execute(prop_get, (p,)).fetchone()
+        cur.execute(prop_set, (prop_scores[0]+prop_scores[1]+prop_scores[2]+prop_scores[3],p,))
+        theme_scores = cur.execute(theme_get, (p,)).fetchone()
+        cur.execute(theme_set, (theme_scores[0]+theme_scores[1],p,))
+        ce_scores = cur.execute(ce_get, (p,)).fetchone()
+        cur.execute(ce_set, (ce_scores[0]+ce_scores[1],p,))
+        for g in ["P", "R", "C", "T"]:
+            calculate.scaled(g)
+        calculate.overall_scores()
 
 # Get player score for a specific game based on ID
 # Same as updating score. Find a way to maybe use game as a variable instead of match statement
@@ -214,7 +294,7 @@ def all_info():
     for d in divisions:
         search = """
             SELECT players.id, player.fname, player.lname, onsets.total, equations.total, ling.total, prop.total, 
-            prop.scaled, pres.total, pres.scaled, ce.total, ce.scaled, theme.total, theme.scaled 
+            prop.scaled, pres.total, pres.scaled, ce.total, ce.scaled, theme.total, theme.scaled, overall.total
             FROM players 
             INNER JOIN onsets ON players.id = onsets.id
             INNER JOIN equations ON players.id = equations.id
@@ -223,9 +303,11 @@ def all_info():
             INNER JOIN pres ON players.id = pres.id
             INNER JOIN ce ON players.id = ce.id
             INNER JOIN theme ON players.id = theme.id
+            INNER JOIN overall ON players.id = overall.id
             WHERE players.division = {div}
+            ORDER BY overall.total DESC
         """.format(div=d)
-        results = cur.execute(search).fetchall()
+        results = list(cur.execute(search).fetchall())
         all_results.append(results)
-    # Returns list of tuples
+    conn.close()
     return all_results

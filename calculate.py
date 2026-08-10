@@ -32,7 +32,10 @@ def scaled(game):
     for player in player_scores:
         if player[1] > max:
             max = player[1]
-    scale_factor = 24/max
+    if max == 0:
+        max = 1
+    else:
+        scale_factor = 24/max
     # Update with scaled scores
     match game:
         case "P":
