@@ -22,25 +22,9 @@ def register(fname, lname, div):
     """
     conn = create_conn()
     cur = conn.cursor()
-    match div:
-        # Middle
-        case div if div.upper() == "M":
-            values = (fname, lname, "M")
-            cur.execute(insert, values)
-            conn.commit()
-            print(f"{fname} {lname}'s player ID is {get_id(fname, lname)}")
-        # Junior
-        case div if div.upper() == "J":
-            values = (fname, lname, "J")
-            cur.execute(insert, values)
-            conn.commit()
-            print(f"{fname} {lname}'s player ID is {get_id(fname, lname)}")
-        # Senior
-        case div if div.upper() == "S":
-            values = (fname, lname, "S")
-            cur.execute(insert, values)
-            conn.commit()
-            print(f"{fname} {lname}'s player ID is {get_id(fname, lname)}")
+    conn.execute(insert, (fname, lname, div))
+    conn.commit()
+    print(f"{fname} {lname}'s player ID is {get_id(fname, lname)}")
     # Add player to game tables
     games = [
         "INSERT INTO onsets(id) VALUES (?);",

@@ -41,7 +41,6 @@ def main_menu():
     option = int(input("Enter selection number: "))
     match option:
         case 1:
-            os.system('cls' if os.name == 'nt' else 'clear')
             register_player()
         case 2:
             os.system('cls' if os.name == 'nt' else 'clear')
@@ -55,7 +54,6 @@ def main_menu():
                     os.system('cls' if os.name == 'nt' else 'clear')
                     get_scores()
                 case 2:
-                    os.system('cls' if os.name == 'nt' else 'clear')
                     input_scores()
         case 3:
             os.system('cls' if os.name == 'nt' else 'clear')
@@ -68,10 +66,6 @@ def main_menu():
         case 5:
             sys.exit()
 
-# Input
-def input_menu():
-    pass
-
 # Get Scores
 def get_scores():
     print("=======Get Scores=======")
@@ -80,10 +74,11 @@ def get_scores():
     print(f"{scores[1]} {scores[2]}'s Scores: \nOn-Sets: {scores[3]}\nEquations: {scores[4]}\nLinguiSHTIK: {scores[5]}"
           f"\nPropaganda Total: {scores[6]} | Scaled: {scores[7]}\nPresidents Total: {scores[8]} | Scaled: {scores[9]}"
           f"\nCurrent Events Total: {scores[10]}\nScaled: {scores[11]} \nTheme Total: {scores[12]} | Scaled: {scores[13]}")
-    breakdown = input("Do you want round breakdown? (Y/N): ")
+    breakdown = input("Do you want individual round breakdowns? (Y/N): ")
     match breakdown.casefold():
         case "y":
             scores = db_utils.all_round_scores(player)
+            os.system('cls' if os.name == 'nt' else 'clear')
             print("=======Score Breakdown by Rounds=======")
             print(f"{scores[1]} {scores[2]}'s Scores: \nOn-Sets: Round 1: {scores[3]} | Round 2: {scores[4]} | "
                   f"Round 3: {scores[5]} | Round 4: {scores[6]} | Total: {scores[7]}\nEquations: Round 1: {scores[8]} | "
@@ -100,11 +95,37 @@ def get_scores():
 
 # Score Input
 def input_scores():
+    os.system('cls' if os.name == 'nt' else 'clear')
     print("=======Input Scores=======")
+    print(f"Game Codes: {'O: On-Sets':20} {'E: Equations':20} {'L: LinguiSHTIK':20}"
+          f"\n{'C: Current Events':20} {'T: Theme':15} {'P: Propaganda':20} {'R: Presidents':20}")
+    game, round = input("Enter Game Code and Round number").split()
+    while True:
+        id = int(input("Enter Player ID: "))
+        print("Player: " + db_utils.get_player(id))
+        score = int(input(f"Enter Round {round} Score: "))
+        db_utils.update_score(score, id, round, game.upper())
+        repeat = input("Enter scores for another player? (Y/N): ")
+        match repeat.casefold():
+            case "y":
+                input_scores()
+            case "n":
+                db_utils.update_totals()
+                main_menu()
 
 # Player Registration
 def register_player():
+    os.system('cls' if os.name == 'nt' else 'clear')
     print("=======Player Registration=======")
+    fname, lname = input("Enter player's name: ").split()
+    div = input("Enter Division (M/J/S): ").upper()
+    db_utils.register(fname, lname, div)
+    cont = input("Do you want to register another player? (Y/N): ")
+    match cont.casefold():
+        case "y":
+            register_player()
+        case "n":
+            main_menu()
 
 if __name__ == '__main__':
     create_db.create_db()
