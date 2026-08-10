@@ -109,15 +109,15 @@ Calculates the best game score from each subject area + next highest separately 
 
 ## TO-DO
 ***
-- [ ] Create Registration System 
+- [x] Create Registration System 
   - [ ] Drop-down for GUI version
 - [x] Implement Database 
-- [ ] Create CSV/PDF generator for scores
-  - [ ] Auto-sort by division
-- [ ] Terminal based system
+- [x] Create CSV/PDF generator for scores
+  - [x] Auto-sort by division
+- [x] Terminal based system
   - [ ] GUI version
     - [ ] Auto updating score viewer?
     - [ ] Tabs to switch between score input and registration
 - [x] Score Calculation System
-  - [ ] Auto calculating scores
+  - [x] Auto calculating scores
   - [x] Dynamic scaling reading games
