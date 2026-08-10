@@ -54,7 +54,7 @@ def generate_csv():
 def player_list():
     generate_folder()
     divs = ["M", "J", "S"]
-    headers = ['ID', 'Name']
+    headers = ['ID', 'First Name', 'Last Name']
     for d in divs:
         players = db_utils.get_players(d)
         match d:
