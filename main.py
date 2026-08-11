@@ -61,9 +61,13 @@ def main_menu():
 #            generate_report.generate_csv()
             generate_report.generate_pdf()
             print("Results have been generated. All files located in the 'reports' folder.")
+            os.system("pause")
+            main_menu()
         case 4:
             generate_report.player_list()
             print("Player list has been generated. File is located in the 'reports' folder.")
+            os.system("pause")
+            main_menu()
         case 5:
             sys.exit()
 
@@ -84,13 +88,15 @@ def get_scores():
             print(f"{scores[1]} {scores[2]}'s Scores: \nOn-Sets: Round 1: {scores[3]} | Round 2: {scores[4]} | "
                   f"Round 3: {scores[5]} | Round 4: {scores[6]} | Total: {scores[7]}\nEquations: Round 1: {scores[8]} | "
                   f"Round 2: {scores[9]} | Round 3: {scores[10]} | Round 4: {scores[11]} | Total: {scores[12]} \n"
-                  f"LinguiSHTIK: Round 1: {scores[14]} | Round 2: {scores[15]} | Round 3: {scores[16]} | "
-                  f"Round 4: {scores[17]} | Total: {scores[18]}\nPropaganda: Round 1: {scores[19]} | Round 2: "
-                  f"{scores[20]} | Round 3: {scores[21]} | Round 4: {scores[22]} | Total: {scores[23]} | Scaled: "
-                  f"{scores[24]} \nPresidents: Round 1: {scores[25]} | Round 2: {scores[26]} | Total: {scores[27]} | "
-                  f"Scaled: {scores[28]} \nCurrent Events: Round 1: {scores[29]} | Round 2: {scores[30]} | Total: "
-                  f"{scores[31]} | Scaled: {scores[32]}\nTheme: Round 1: {scores[33]} | Round 2: {scores[34]} | Total: "
-                  f"{scores[35]} | Scaled: {scores[36]}")
+                  f"LinguiSHTIK: Round 1: {scores[13]} | Round 2: {scores[14]} | Round 3: {scores[15]} | "
+                  f"Round 4: {scores[16]} | Total: {scores[17]}\nPropaganda: Round 1: {scores[18]} | Round 2: "
+                  f"{scores[19]} | Round 3: {scores[20]} | Round 4: {scores[21]} | Total: {scores[22]} | Scaled: "
+                  f"{scores[23]} \nPresidents: Round 1: {scores[24]} | Round 2: {scores[25]} | Total: {scores[26]} | "
+                  f"Scaled: {scores[27]} \nCurrent Events: Round 1: {scores[28]} | Round 2: {scores[29]} | Total: "
+                  f"{scores[30]} | Scaled: {scores[31]}\nTheme: Round 1: {scores[32]} | Round 2: {scores[33]} | Total: "
+                  f"{scores[34]} | Scaled: {scores[35]}")
+            os.system("pause")
+            main_menu()
         case "N":
             main_menu()
 

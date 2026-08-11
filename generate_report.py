@@ -82,11 +82,23 @@ def generate_pdf():
     generate_folder()
     generate_csv()
     if os.path.exists('reports/Middle_Results.pdf'):
-        os.remove('reports/Middle_Results.pdf')
+        try:
+            os.remove('reports/Middle_Results.pdf')
+        except IOError:
+            print("Error updating Middle division file(s). Please close any open files and try again.")
+            os.system("pause")
     if os.path.exists('reports/Junior_Results.pdf'):
-        os.remove('reports/Junior_Results.pdf')
+        try:
+            os.remove('reports/Junior_Results.pdf')
+        except IOError:
+            print("Error updating Junior division file(s). Please close any open files and try again.")
+            os.system("pause")
     if os.path.exists('reports/Senior_Results.pdf'):
-        os.remove('reports/Senior_Results.pdf')
-    convert('reports/Middle_Results.csv', 'reports/Middle_Results.pdf', orientation="L")
-    convert('reports/Junior_Results.csv', 'reports/Junior_Results.pdf', orientation="L")
-    convert('reports/Senior_Results.csv', 'reports/Senior_Results.pdf', orientation="L")
+        try:
+            os.remove('reports/Senior_Results.pdf')
+        except IOError:
+            print("Error updating Senior division file(s). Please close any open files and try again.")
+            os.system("pause")
+    convert('reports/Middle_Results.csv', 'reports/Middle_Results.pdf', orientation="L", headersize=8)
+    convert('reports/Junior_Results.csv', 'reports/Junior_Results.pdf', orientation="L",headersize=8)
+    convert('reports/Senior_Results.csv', 'reports/Senior_Results.pdf', orientation="L",headersize=8)

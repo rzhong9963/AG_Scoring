@@ -14,7 +14,7 @@ def create_conn():
         conn = sqlite3.connect(db)
     except Error as e:
         logging.INFO(e)
-    conn.execute("PRAGMA journal_mode=WAL;")
+#    conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA busy_timeout = 30000;")
     return conn
 
@@ -252,7 +252,7 @@ def get_score(id, game):
 # Get all game scores for a single player
 def all_scores(id):
     search = """
-        SELECT players.id, player.fname, player.lname, onsets.total, equations.total, ling.total, prop.total, 
+        SELECT players.id, players.fname, players.lname, onsets.total, equations.total, ling.total, prop.total, 
         prop.scaled, pres.total, pres.scaled, ce.total, ce.scaled, theme.total, theme.scaled  
         FROM players 
         INNER JOIN onsets ON players.id = onsets.id
@@ -262,6 +262,7 @@ def all_scores(id):
         INNER JOIN pres ON players.id = pres.id
         INNER JOIN ce ON players.id = ce.id
         INNER JOIN theme ON players.id = theme.id
+        WHERE players.id = ?
     """
     conn = create_conn()
     cur = conn.cursor()
@@ -272,7 +273,7 @@ def all_scores(id):
 # Same as all_scores, but include each individual round
 def all_round_scores(id):
     search = """
-        SELECT players.id, player.fname, player.lname, onsets.r1, onsets.r2, onsets.r3, onsets.r4, onsets.total, 
+        SELECT players.id, players.fname, players.lname, onsets.r1, onsets.r2, onsets.r3, onsets.r4, onsets.total, 
         equations.r1, equations.r2, equations.r3, equations.r4, equations.total, ling.r1, ling.r2, ling.r3, ling.r4,
         ling.total, prop.r1, prop.r2, prop.r3, prop.r4, prop.total, prop.scaled, pres.r1, pres.r2, pres.total, 
         pres.scaled, ce.r1, ce.r2, ce.total, ce.scaled, theme.r1, theme.r2, theme.total, theme.scaled
@@ -284,6 +285,7 @@ def all_round_scores(id):
         INNER JOIN pres ON players.id = pres.id
         INNER JOIN ce ON players.id = ce.id
         INNER JOIN theme ON players.id = theme.id
+        WHERE players.id = ?
     """
     conn = create_conn()
     cur = conn.cursor()

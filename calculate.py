@@ -152,7 +152,6 @@ def overall_scores():
         scores[k] = (lang_max[k], math_max[k], social_max[k], other[k])
         overall_score = sum(scores[k])
         scores[k] += (overall_score, k)
-        print(scores[k])
         cur.execute(overall, (scores[k]))
         conn.commit()
     conn.close()
