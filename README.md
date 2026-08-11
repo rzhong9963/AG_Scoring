@@ -17,7 +17,7 @@ All options return back to the main menu once finished (with the exception of `E
    2. The `Input Scores` menu displays all the games and a single-letter code used to identify each game. You will be prompted to enter the game code and round number (space separated) to input scores. For example, to do On-Sets round 2, you would simply type `O 2`. The current game and round number will be displayed while you input scores based on player ID. After the ID is entered, the player name will appear as a verification. Once score input is finished, the program will automatically calculate totals and scale reading games scores.
 3. Generate Results
    
-    As of now, the generate results function generates both a PDF and CSV format for scores of all players separated by division sorted by rank based on overall score totals. The files are stored in a folder called `reports` in the same directory as this program. **<u>When running this, please ensure all relevant files are closed or it will error out.</u>**
+    As of now, the generate results function generates both a PDF and CSV format for scores of all players separated by division sorted by rank based on overall score totals. The files are stored in a folder called `reports` in the same directory as this program. **<ins>When running this, please ensure all relevant files are closed or it will error out.</ins>**
 4. Export Player List
 
     Also self-explanatory. This simply exports a CSV file of all players separated by division. The exported file can be modified however you like. However, if the function is run again, it will clear any additions made.
