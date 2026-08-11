@@ -128,6 +128,7 @@ def input_scores():
             case "Y":
                 continue
             case "N":
+                print("Updating Scores...")
                 db_utils.update_totals()
                 main_menu()
 

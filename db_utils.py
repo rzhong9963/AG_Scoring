@@ -14,6 +14,8 @@ def create_conn():
         conn = sqlite3.connect(db)
     except Error as e:
         logging.INFO(e)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA busy_timeout = 30000;")
     return conn
 
 # Add player and print ID after
@@ -23,6 +25,7 @@ def register(fname, lname, div):
     """
     conn = create_conn()
     cur = conn.cursor()
+    conn.execute("PRAGMA foreign_keys = ON;")
     conn.execute(insert, (fname, lname, div))
     conn.commit()
     print(f"{fname} {lname}'s player ID is {get_id(fname, lname)}")
@@ -135,9 +138,9 @@ def update_score(score, id, round, game):
 # Update totals
 def update_totals():
     players = get_all_players()
-    conn = create_conn()
-    cur = conn.cursor()
     for p in players:
+        conn = create_conn()
+        cur = conn.cursor()
         os_get = """
             SELECT r1, r2, r3, r4 FROM onsets WHERE id = ?
         """
@@ -194,6 +197,8 @@ def update_totals():
         cur.execute(theme_set, (theme_scores[0]+theme_scores[1],p[0],))
         ce_scores = cur.execute(ce_get, (p[0],)).fetchone()
         cur.execute(ce_set, (ce_scores[0]+ce_scores[1],p[0],))
+        conn.commit()
+        conn.close()
         for g in ["P", "R", "C", "T"]:
             calculate.scaled(g)
         calculate.overall_scores()
@@ -294,7 +299,7 @@ def all_info():
     cur = conn.cursor()
     for d in divisions:
         search = """
-            SELECT players.id, player.fname, player.lname, onsets.total, equations.total, ling.total, prop.total, 
+            SELECT players.id, players.fname, players.lname, onsets.total, equations.total, ling.total, prop.total, 
             prop.scaled, pres.total, pres.scaled, ce.total, ce.scaled, theme.total, theme.scaled, overall.total
             FROM players 
             INNER JOIN onsets ON players.id = onsets.id
@@ -305,10 +310,10 @@ def all_info():
             INNER JOIN ce ON players.id = ce.id
             INNER JOIN theme ON players.id = theme.id
             INNER JOIN overall ON players.id = overall.id
-            WHERE players.division = {div}
+            WHERE players.division = ?
             ORDER BY overall.total DESC
-        """.format(div=d)
-        results = list(cur.execute(search).fetchall())
+        """
+        results = list(cur.execute(search, (d,)).fetchall())
         all_results.append(results)
     conn.close()
     return all_results

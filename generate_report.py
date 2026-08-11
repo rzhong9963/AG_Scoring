@@ -1,3 +1,5 @@
+import os
+
 import db_utils
 from pathlib import Path
 import logging
@@ -11,7 +13,7 @@ divisions = ["M", "J", "S"]
 # Create reports folder. Everything will be saved here, including player list
 def generate_folder():
     directory_path = Path("reports")
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.ERROR)
     # Create results directory
     try:
         directory_path.mkdir()
@@ -26,8 +28,8 @@ def generate_folder():
 # Generate CSV version of results. One file per division
 def generate_csv():
     generate_folder()
-    headers = ['ID', 'Name', 'On-Sets', 'Equations', 'LinguiSHTIK', 'Propaganda', 'Propaganda Scaled', 'Presidents',
-               'Presidents Scaled', 'Current Events', 'Current Events Scaled', 'Theme', 'Theme Scaled', 'Overall']
+    headers = ['ID', 'First Name', 'Last Name', 'On-Sets', 'Equations', 'LinguiSHTIK', 'Propaganda', 'Propaganda Scaled',
+               'Presidents', 'Presidents Scaled', 'Current Events', 'Current Events Scaled', 'Theme', 'Theme Scaled', 'Overall']
     all_data = db_utils.all_info()
     middle_data = all_data[0]
     junior_data = all_data[1]
@@ -79,6 +81,12 @@ def player_list():
 def generate_pdf():
     generate_folder()
     generate_csv()
+    if os.path.exists('reports/Middle_Results.pdf'):
+        os.remove('reports/Middle_Results.pdf')
+    if os.path.exists('reports/Junior_Results.pdf'):
+        os.remove('reports/Junior_Results.pdf')
+    if os.path.exists('reports/Senior_Results.pdf'):
+        os.remove('reports/Senior_Results.pdf')
     convert('reports/Middle_Results.csv', 'reports/Middle_Results.pdf', orientation="L")
     convert('reports/Junior_Results.csv', 'reports/Junior_Results.pdf', orientation="L")
     convert('reports/Senior_Results.csv', 'reports/Senior_Results.pdf', orientation="L")

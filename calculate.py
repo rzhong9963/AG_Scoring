@@ -33,7 +33,7 @@ def scaled(game):
         if player[1] > max:
             max = player[1]
     if max == 0:
-        max = 1
+        scale_factor = 1
     else:
         scale_factor = 24/max
     # Update with scaled scores
@@ -76,7 +76,7 @@ def overall_scores():
     other = {}
     theme_score = {}
     overall = """
-        UPDATE overall SET game1 = ?, game2 = ?, game3 = ?, game4 = ?, total = ? WHERE id = ?
+        UPDATE overall SET g1 = ?, g2 = ?, g3 = ?, g4 = ?, total = ? WHERE id = ?
     """
     # Math game comparisons | OS and EQ
     onsets = """
@@ -120,7 +120,7 @@ def overall_scores():
         continue
     # English game comparisons | Ling and Prop
     ling = """
-        SELECT id, toal FROM ling
+        SELECT id, total FROM ling
     """
     prop = """
         SELECT id, scaled FROM prop
@@ -150,8 +150,9 @@ def overall_scores():
     scores = {}
     for k in other:
         scores[k] = (lang_max[k], math_max[k], social_max[k], other[k])
-        overall_score = sum(scores[k]),
+        overall_score = sum(scores[k])
         scores[k] += (overall_score, k)
+        print(scores[k])
         cur.execute(overall, (scores[k]))
         conn.commit()
     conn.close()
