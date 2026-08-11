@@ -4,7 +4,7 @@ Re-creation of scoring system used in Academic Games. Currently designed for loc
 
 ## How to Use
 ***
-Save this repository in a folder of your choice. To run, type `python main.py`. Make sure at least Python 3.10 is installed (3.14 preferred). As of now, the whole program is terminal-based.
+Save this repository in a folder of your choice. Make sure any dependencies are installed. To install, the command `python -m pip install -r requirements.txt` can be run. Once finished, to run the program, type `python main.py`. Make sure at least Python 3.10 is installed (3.14 preferred). As of now, the whole program is terminal-based.
 #### Main Menu Options
 All options return back to the main menu once finished (with the exception of `Exit`) in case another option is needed. Inputs are case-insensitive.
 1. Register Players
