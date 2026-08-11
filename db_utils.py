@@ -76,7 +76,10 @@ def get_player(id):
     cur = conn.cursor()
     player_name = cur.execute(search, (id,)).fetchone()
     conn.close()
-    player_name_str = player_name[0] + " " + player_name[1]
+    if player_name is not None:
+        player_name_str = player_name[0] + " " + player_name[1]
+    else:
+        player_name_str = "Player ID not Found"
     return player_name_str
 
 # Get all players without division separation

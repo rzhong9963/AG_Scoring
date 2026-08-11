@@ -70,6 +70,10 @@ def main_menu():
             main_menu()
         case 5:
             sys.exit()
+        case _:
+            print("Invalid selection.")
+            os.system("pause")
+            main_menu()
 
 # Get Scores
 def get_scores():
@@ -99,6 +103,10 @@ def get_scores():
             main_menu()
         case "N":
             main_menu()
+        case _:
+            print("Unknown selection. Exiting to Main Menu")
+            os.system("pause")
+            main_menu()
 
 # Score Input
 def input_scores():
@@ -107,6 +115,10 @@ def input_scores():
     print(f"Game Codes: {'O: On-Sets':20} {'E: Equations':20} {'L: LinguiSHTIK':20}"
           f"\n{'C: Current Events':20} {'T: Theme':15} {'P: Propaganda':20} {'R: Presidents':20}")
     game, round = input("Enter Game Code and Round number: ").split()
+    if round not in {"1", "2", "3", "4"}:
+        print("Invalid Round")
+        os.system("pause")
+        input_scores()
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
         print("=======Score Input=======")
@@ -118,15 +130,40 @@ def input_scores():
             case "L":
                 print(f"Current Game: LinguiSHTIK | Round {round}")
             case "C":
-                print(f"Current Game: Current Events | Round {round}")
+                if round == "3" or round == "4":
+                    print("Invalid Round")
+                    os.system("pause")
+                    input_scores()
+                else:
+                    print(f"Current Game: Current Events | Round {round}")
             case "T":
-                print(f"Current Game: Theme | Round {round}")
+                if round == "3" or round == "4":
+                    print("Invalid Round")
+                    os.system("pause")
+                    input_scores()
+                else:
+                    print(f"Current Game: Theme | Round {round}")
             case "P":
                 print(f"Current Game: Propaganda | Round {round}")
             case "R":
-                print(f"Current Game: Presidents | Round {round}")
+                if round == "3" or round == "4":
+                    print("Invalid Round")
+                    os.system("pause")
+                    input_scores()
+                else:
+                    print(f"Current Game: Presidents | Round {round}")
+            case _:
+                print("Invalid Game")
+                os.system("pause")
+                input_scores()
         id = int(input("Enter Player ID: "))
-        print("Player: " + db_utils.get_player(id))
+        player_name = db_utils.get_player(id)
+        if player_name == "Player ID not Found":
+            print("Player ID not Found")
+            os.system("pause")
+            continue
+        else:
+            print("Player: " + db_utils.get_player(id))
         score = int(input(f"Enter Round {round} Score: "))
         db_utils.update_score(score, id, round, game.upper())
         repeat = input("Enter scores for another player? (Y/N): ")
@@ -136,6 +173,10 @@ def input_scores():
             case "N":
                 print("Updating Scores...")
                 db_utils.update_totals()
+                main_menu()
+            case _:
+                print("Unknown input. Exiting to Main Menu")
+                os.system("pause")
                 main_menu()
 
 # Player Registration
