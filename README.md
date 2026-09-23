@@ -9,7 +9,9 @@ Save this repository in a folder of your choice. Make sure any dependencies are 
 All options return back to the main menu once finished (with the exception of `Exit`) in case another option is needed. Inputs are case-insensitive.
 1. Register Players
 
-    Self-explanatory. In this sub-menu, you'll be prompted to enter the player's first and last name separated by a single space. You'll then be prompted to enter their division as "M" for Middle, "J" for Junior, or "S" for Senior (case-insensitive). Once entered, that player's ID will then be displayed as confirmation. You'll also get a prompt to register another player if so desired.
+    Self-explanatory. You are first greeted with an option to update any player's name. If no option is chosen, it continues to player registration. If yes is chosen, you will enter the player's ID, and then you'll be shown the current name associated with the ID. You will then proceed with entering the new first and last name (single space separated). You can repeat this for any players that need a name update. You'll be redirected back to the main menu if no further updates need to be done.
+    
+    In this sub-menu, you'll be prompted to enter the player's first and last name separated by a single space. You'll then be prompted to enter their division as "M" for Middle, "J" for Junior, or "S" for Senior (case-insensitive). Once entered, that player's ID will then be displayed as confirmation. You'll also get a prompt to register another player if so desired.
 2. Input/Get Scores
 
     This sub-menu has two options. `Get Scores` and `Input Scores`.

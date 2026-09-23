@@ -212,6 +212,8 @@ def update_player():
             update_player()
         case "N":
             main_menu()
+        case _:
+            main_menu()
 
 if __name__ == '__main__':
     create_db.create_db()
