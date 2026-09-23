@@ -7,6 +7,7 @@ import csv
 from csv2pdf import convert
 # Explore this one in the future
 #from fpdf import Template
+from fpdf import FPDF
 
 divisions = ["M", "J", "S"]
 
@@ -99,6 +100,5 @@ def generate_pdf():
         except IOError:
             print("Error updating Senior division file(s). Please close any open files and try again.")
             os.system("pause")
-    convert('reports/Middle_Results.csv', 'reports/Middle_Results.pdf', orientation="L", headersize=8)
-    convert('reports/Junior_Results.csv', 'reports/Junior_Results.pdf', orientation="L",headersize=8)
-    convert('reports/Senior_Results.csv', 'reports/Senior_Results.pdf', orientation="L",headersize=8)
+    pdf = FPDF()
+    pdf.add_page()
