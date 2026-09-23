@@ -45,6 +45,17 @@ def register(fname, lname, div):
         conn.commit()
     conn.close()
 
+# Update player name
+def update(id, fname, lname):
+    update = """
+        UPDATE players SET fname = ?, lname = ? WHERE id = ?
+    """
+    conn = create_conn()
+    cur = conn.cursor()
+    cur.execute(update, (fname, lname, id))
+    conn.commit()
+    conn.close()
+
 # Returns list of players by ID
 def get_players(div):
     search = """

@@ -41,7 +41,11 @@ def main_menu():
     option = int(input("Enter selection number: "))
     match option:
         case 1:
-            register_player()
+            update = input("Are there any player names that need to be updated? (Y/N)").upper()
+            if update == "Y":
+                update_player()
+            else:
+                register_player()
         case 2:
             os.system('cls' if os.name == 'nt' else 'clear')
             print("=======Input Scores=======")
@@ -190,6 +194,22 @@ def register_player():
     match cont.upper():
         case "Y":
             register_player()
+        case "N":
+            main_menu()
+
+# Update Player Name
+def update_player():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("=======Player Update=======")
+    id = input("Enter Player ID: ")
+    player_name = db_utils.get_player(id)
+    print("Player " + id + "'s name is currently: " + player_name)
+    fname, lname = input("Enter player's updated name: ").split()
+    db_utils.update(id, fname, lname)
+    cont = input("Do you want to update another player? (Y/N): ")
+    match cont.upper():
+        case "Y":
+            update_player()
         case "N":
             main_menu()
 
