@@ -361,7 +361,7 @@ def game_totals(game):
             """
         case "L":
             search = """
-                SELECT players.id, players.fname, players.lname, players.division, ling.r1, ling.r2, ling.r3, ling.r4, ling.total
+                SELECT players.id, players.fname, players.lname, ling.r1, ling.r2, ling.r3, ling.r4, ling.total
                 FROM players
                 INNER JOIN ling ON players.id = ling.id
                 WHERE players.division = ?
@@ -369,7 +369,7 @@ def game_totals(game):
             """
         case "P":
             search = """
-                SELECT players.id, players.fname, players.lname, players.division, prop.r1, prop.r2, prop.r3, prop.r4, prop.total, prop.scaled
+                SELECT players.id, players.fname, players.lname, prop.r1, prop.r2, prop.r3, prop.r4, prop.total, prop.scaled
                 FROM players
                 INNER JOIN prop ON players.id = prop.id
                 WHERE players.division = ?
@@ -377,7 +377,7 @@ def game_totals(game):
             """
         case "R":
             search = """
-                SELECT players.id, players.fname, players.lname, players.division, pres.r1, pres.r2, pres.total, pres.scaled
+                SELECT players.id, players.fname, players.lname, pres.r1, pres.r2, pres.total, pres.scaled
                 FROM players
                 INNER JOIN pres ON players.id = pres.id
                 WHERE players.division = ?
@@ -385,7 +385,7 @@ def game_totals(game):
             """
         case "C":
             search = """
-                SELECT players.id, players.fname, players.lname, players.division, ce.r1, ce.r2, ce.total, ce.scaled
+                SELECT players.id, players.fname, players.lname, ce.r1, ce.r2, ce.total, ce.scaled
                 FROM players
                 INNER JOIN ce ON players.id = ce.id
                 WHERE players.division = ?
@@ -393,7 +393,7 @@ def game_totals(game):
             """
         case "T":
             search = """
-                SELECT players.id, players.fname, players.lname, players.division, theme.r1, theme.r2, theme.total, theme.scaled
+                SELECT players.id, players.fname, players.lname, theme.r1, theme.r2, theme.total, theme.scaled
                 FROM players
                 INNER JOIN theme ON players.id = theme.id
                 WHERE players.division = ?
