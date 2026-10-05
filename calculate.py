@@ -13,20 +13,28 @@ def scaled(game):
     match game:
         case "P":
             search = """
-                SELECT id, total FROM {game} WHERE div = ?
-            """.format(game="prop")
+                SELECT prop.id, prop.total FROM prop 
+                INNER JOIN players ON players.id = prop.id
+                WHERE players.div = ?
+            """
         case "R":
             search = """
-                SELECT id, total FROM {game} WHERE div = ?
-            """.format(game="pres")
+                SELECT id, total FROM pres
+                INNER JOIN players ON players.id = pres.id
+                WHERE players.div = ?
+            """
         case "C":
             search = """
-                SELECT id, total FROM {game} WHERE div = ?
-            """.format(game="ce")
+                SELECT id, total FROM ce
+                INNER JOIN players ON players.id = ce.id
+                WHERE players.div = ?
+            """
         case "T":
             search = """
-                SELECT id, total FROM {game} WHERE div = ?
-            """.format(game="theme")
+                SELECT id, total FROM theme 
+                INNER JOIN players ON players.id = theme.id
+                WHERE players.div = ? 
+            """
     # Get highest score first to establish scale factor
     for d in ["M","J","S"]:
         player_scores = cur.execute(search, (d,)).fetchall()

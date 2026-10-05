@@ -64,6 +64,7 @@ def main_menu():
             # Since PDF also generates CSV
 #            generate_report.generate_csv()
             generate_report.generate_pdf()
+            generate_report.game_reports()
             print("Results have been generated. All files located in the 'reports' folder.")
             os.system("pause")
             main_menu()
