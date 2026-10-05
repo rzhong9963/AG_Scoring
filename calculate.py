@@ -6,7 +6,6 @@ import db_utils
 
 # Scale scores for reading games
 def scaled(game):
-    max = 0
     conn = db_utils.create_conn()
     cur = conn.cursor()
     # Get each player's total score
@@ -15,28 +14,29 @@ def scaled(game):
             search = """
                 SELECT prop.id, prop.total FROM prop 
                 INNER JOIN players ON players.id = prop.id
-                WHERE players.div = ?
+                WHERE players.division = ?
             """
         case "R":
             search = """
-                SELECT id, total FROM pres
+                SELECT pres.id, total FROM pres
                 INNER JOIN players ON players.id = pres.id
-                WHERE players.div = ?
+                WHERE players.division = ?
             """
         case "C":
             search = """
-                SELECT id, total FROM ce
+                SELECT ce.id, total FROM ce
                 INNER JOIN players ON players.id = ce.id
-                WHERE players.div = ?
+                WHERE players.division = ?
             """
         case "T":
             search = """
-                SELECT id, total FROM theme 
+                SELECT theme.id, total FROM theme 
                 INNER JOIN players ON players.id = theme.id
-                WHERE players.div = ? 
+                WHERE players.division = ? 
             """
     # Get highest score first to establish scale factor
     for d in ["M","J","S"]:
+        max = 0
         player_scores = cur.execute(search, (d,)).fetchall()
         for player in player_scores:
             if player[1] > max:
@@ -67,7 +67,7 @@ def scaled(game):
             scaled_score = player[1] * scale_factor
             cur.execute(insert, (scaled_score, player[0]))
             conn.commit()
-        conn.close()
+    conn.close()
 
 # Overall score calculation
 # Gets higher score between the two games in each category and gets the next highest by using the min from each category
