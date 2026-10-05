@@ -129,7 +129,7 @@ def game_reports():
                     game = "Current Events"
                 elif g == "R":
                     game = "Presidents"
-        results = db_utils.game_totals()
+        results = db_utils.game_totals(g)
         middle_results = results[0]
         junior_results = results[1]
         senior_results = results[2]
