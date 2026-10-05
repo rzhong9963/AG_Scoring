@@ -118,7 +118,12 @@ def input_scores():
     print("=======Score Input=======")
     print(f"Game Codes: {'O: On-Sets':20} {'E: Equations':20} {'L: LinguiSHTIK':20}"
           f"\n{'C: Current Events':20} {'T: Theme':15} {'P: Propaganda':20} {'R: Presidents':20}")
-    game, round = input("Enter Game Code and Round number: ").split()
+    while True:
+        try:
+            game, round = input("Enter Game Code and Round number: ").split()
+            break
+        except ValueError:
+            print("Not enough inputs, please try again.")
     if round not in {"1", "2", "3", "4"}:
         print("Invalid Round")
         os.system("pause")
@@ -161,6 +166,10 @@ def input_scores():
                 os.system("pause")
                 input_scores()
         id = int(input("Enter Player ID: "))
+        if id == -1:
+            print("Updating Scores and Exiting...")
+            db_utils.update_totals()
+            main_menu()
         player_name = db_utils.get_player(id)
         if player_name == "Player ID not Found":
             print("Player ID not Found")
@@ -169,7 +178,10 @@ def input_scores():
         else:
             print("Player: " + db_utils.get_player(id))
         score = int(input(f"Enter Round {round} Score: "))
+        if score == 99:
+            continue
         db_utils.update_score(score, id, round, game.upper())
+"""
         repeat = input("Enter scores for another player? (Y/N): ")
         match repeat.upper():
             case "Y":
@@ -182,6 +194,7 @@ def input_scores():
                 print("Unknown input. Exiting to Main Menu")
                 os.system("pause")
                 main_menu()
+"""
 
 # Player Registration
 def register_player():

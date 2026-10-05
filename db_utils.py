@@ -1,6 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 import logging
+from unittest import case
+
 import calculate
 
 # DB name
@@ -333,3 +335,72 @@ def all_info():
         all_results.append(results)
     conn.close()
     return all_results
+
+# Individual game results
+def game_totals(game):
+    divisions = ["M", "J", "S"]
+    conn = create_conn()
+    cur = conn.cursor()
+    all_game_results = []
+    match game:
+        case "O":
+            search = """
+                SELECT players.id, players.fname, players.lname, onsets.r1, onsets.r2, onsets.r3, onsets.r4, onsets.total
+                FROM players
+                INNER JOIN onsets ON players.id = onsets.id
+                WHERE players.divison = ?
+                ORDER BY onsets.total DESC
+            """
+        case "E":
+            search = """
+                SELECT players.id, players.fname, players.lname, equations.r1, equations.r2, equations.r3, equations.r4, equations.total
+                FROM players
+                INNER JOIN equations ON players.id = equations.id
+                WHERE players.divison = ?
+                ORDER BY equations.total DESC
+            """
+        case "L":
+            search = """
+                SELECT players.id, players.fname, players.lname, ling.r1, ling.r2, ling.r3, ling.r4, ling.total
+                FROM players
+                INNER JOIN ling ON players.id = ling.id
+                WHERE players.divison = ?
+                ORDER BY ling.total DESC
+            """
+        case "P":
+            search = """
+                SELECT players.id, players.fname, players.lname, prop.r1, prop.r2, prop.r3, prop.r4, prop.total, prop.scaled
+                FROM players
+                INNER JOIN prop ON players.id = prop.id
+                WHERE players.divison = ?
+                ORDER BY prop.scaled DESC
+            """
+        case "R":
+            search = """
+                SELECT players.id, players.fname, players.lname, pres.r1, pres.r2, pres.total, pres.scaled
+                FROM players
+                INNER JOIN pres ON players.id = pres.id
+                WHERE players.divison = ?
+                ORDER BY pres.scaled DESC
+            """
+        case "C":
+            search = """
+                SELECT players.id, players.fname, players.lname, ce.r1, ce.r2, ce.total, ce.scaled
+                FROM players
+                INNER JOIN ce ON players.id = ce.id
+                WHERE players.divison = ?
+                ORDER BY ce.scaled DESC
+            """
+        case "T":
+            search = """
+                SELECT players.id, players.fname, players.lname, theme.r1, theme.r2, theme.total, theme.scaled
+                FROM players
+                INNER JOIN theme ON players.id = theme.id
+                WHERE players.divison = ?
+                ORDER BY theme.scaled DESC
+            """
+    for d in divisions:
+        results = list(cur.execute(search, (d,)).fetchall())
+        all_game_results.append(results)
+    conn.close()
+    return all_game_results

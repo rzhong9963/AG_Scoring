@@ -102,3 +102,55 @@ def generate_pdf():
     convert('reports/Middle_Results.csv', 'reports/Middle_Results.pdf', orientation="L", headersize=8)
     convert('reports/Junior_Results.csv', 'reports/Junior_Results.pdf', orientation="L",headersize=8)
     convert('reports/Senior_Results.csv', 'reports/Senior_Results.pdf', orientation="L",headersize=8)
+
+# Generate reports for each game
+def game_reports():
+    generate_folder()
+    games = ["O","E","L","T","P","R","C"]
+    divisions = ["M","J","S"]
+    for g in games:
+        match g:
+            case "O" | "E" | "L":
+                headers = ['ID', 'First Name', 'Last Name', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Total']
+                if g == "O":
+                    game = "On-Sets"
+                elif g == "E":
+                    game = "Equations"
+                elif g == "L":
+                    game = "LinguiSHTIK"
+            case "P":
+                headers = ['ID', 'First Name', 'Last Name', 'Round 1', 'Round 2', 'Round 3', 'Round 4', 'Total', 'Scaled']
+                game = "Prop"
+            case "T" | "C" | "R":
+                headers = ['ID', 'First Name', 'Last Name', 'Round 1', 'Round 2', 'Total', 'Scaled']
+                if g == "T":
+                    game = "Theme"
+                elif g == "C":
+                    game = "Current Events"
+                elif g == "R":
+                    game = "Presidents"
+        results = db_utils.game_totals()
+        middle_results = results[0]
+        junior_results = results[1]
+        senior_results = results[2]
+        for d in divisions:
+            match d:
+                case "M":
+                    filename = f"reports/Middle_{game}_Results.csv"
+                    with open(filename, 'w', newline='') as file:
+                        writer = csv.writer(file)
+                        writer.writerow(headers)
+                        writer.writerows(middle_results)
+                case "J":
+                    filename = f"reports/Junior_{game}_Results.csv"
+                    with open(filename, 'w', newline='') as file:
+                        writer = csv.writer(file)
+                        writer.writerow(headers)
+                        writer.writerows(junior_results)
+                case "S":
+                    filename = f"reports/Senior_{game}_Results.csv"
+                    with open(filename, 'w', newline='') as file:
+                        writer = csv.writer(file)
+                        writer.writerow(headers)
+                        writer.writerows(senior_results)
+

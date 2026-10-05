@@ -13,52 +13,53 @@ def scaled(game):
     match game:
         case "P":
             search = """
-                SELECT id, total FROM {game}
+                SELECT id, total FROM {game} WHERE div = ?
             """.format(game="prop")
         case "R":
             search = """
-                SELECT id, total FROM {game}
+                SELECT id, total FROM {game} WHERE div = ?
             """.format(game="pres")
         case "C":
             search = """
-                SELECT id, total FROM {game}
+                SELECT id, total FROM {game} WHERE div = ?
             """.format(game="ce")
         case "T":
             search = """
-                SELECT id, total FROM {game}
+                SELECT id, total FROM {game} WHERE div = ?
             """.format(game="theme")
-    player_scores = cur.execute(search).fetchall()
     # Get highest score first to establish scale factor
-    for player in player_scores:
-        if player[1] > max:
-            max = player[1]
-    if max == 0:
-        scale_factor = 1
-    else:
-        scale_factor = 24/max
-    # Update with scaled scores
-    match game:
-        case "P":
-            insert = """
-                UPDATE prop SET scaled = ? WHERE id = ?
-            """
-        case "R":
-            insert = """
-                UPDATE pres SET scaled = ? WHERE id = ?
-            """
-        case "C":
-            insert = """
-                UPDATE ce SET scaled = ? WHERE id = ?
-            """
-        case "T":
-            insert = """
-                UPDATE theme SET scaled = ? WHERE id = ?
-            """
-    for player in player_scores:
-        scaled_score = player[1] * scale_factor
-        cur.execute(insert, (scaled_score, player[0]))
-        conn.commit()
-    conn.close()
+    for d in ["M","J","S"]:
+        player_scores = cur.execute(search, (d,)).fetchall()
+        for player in player_scores:
+            if player[1] > max:
+                max = player[1]
+        if max == 0:
+            scale_factor = 1
+        else:
+            scale_factor = 24/max
+        # Update with scaled scores
+        match game:
+            case "P":
+                insert = """
+                    UPDATE prop SET scaled = ? WHERE id = ?
+                """
+            case "R":
+                insert = """
+                    UPDATE pres SET scaled = ? WHERE id = ?
+                """
+            case "C":
+                insert = """
+                    UPDATE ce SET scaled = ? WHERE id = ?
+                """
+            case "T":
+                insert = """
+                    UPDATE theme SET scaled = ? WHERE id = ?
+                """
+        for player in player_scores:
+            scaled_score = player[1] * scale_factor
+            cur.execute(insert, (scaled_score, player[0]))
+            conn.commit()
+        conn.close()
 
 # Overall score calculation
 # Gets higher score between the two games in each category and gets the next highest by using the min from each category
