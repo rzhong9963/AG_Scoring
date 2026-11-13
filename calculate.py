@@ -35,7 +35,7 @@ def scaled(game):
                 WHERE players.division = ? 
             """
     # Get highest score first to establish scale factor
-    for d in ["M","J","S"]:
+    for d in ["E","M","J","S"]:
         max = 0
         player_scores = cur.execute(search, (d,)).fetchall()
         for player in player_scores:

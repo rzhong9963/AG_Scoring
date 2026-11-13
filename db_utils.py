@@ -1,8 +1,6 @@
 import sqlite3
 from sqlite3 import Error
 import logging
-from unittest import case
-
 import calculate
 
 # DB name
@@ -311,7 +309,7 @@ def all_round_scores(id):
 
 # All information for reporting purposes
 def all_info():
-    divisions = ["M", "J", "S"]
+    divisions = ["E", "M", "J", "S"]
     all_results = []
     conn = create_conn()
     cur = conn.cursor()
@@ -338,7 +336,7 @@ def all_info():
 
 # Individual game results
 def game_totals(game):
-    divisions = ["M", "J", "S"]
+    divisions = ["E", "M", "J", "S"]
     conn = create_conn()
     cur = conn.cursor()
     all_game_results = []

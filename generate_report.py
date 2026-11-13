@@ -8,7 +8,7 @@ from csv2pdf import convert
 # Explore this one in the future
 #from fpdf import Template
 
-divisions = ["M", "J", "S"]
+divisions = ["E", "M", "J", "S"]
 
 # Create reports folder. Everything will be saved here, including player list
 def generate_folder():
@@ -31,11 +31,17 @@ def generate_csv():
     headers = ['ID', 'First Name', 'Last Name', 'On-Sets', 'Equations', 'LinguiSHTIK', 'Propaganda', 'Propaganda Scaled',
                'Presidents', 'Presidents Scaled', 'Current Events', 'Current Events Scaled', 'Theme', 'Theme Scaled', 'Overall']
     all_data = db_utils.all_info()
-    middle_data = all_data[0]
-    junior_data = all_data[1]
-    senior_data = all_data[2]
+    elem_data = all_data[0]
+    middle_data = all_data[1]
+    junior_data = all_data[2]
+    senior_data = all_data[3]
     for d in divisions:
         match d:
+            case "E":
+                with open("reports/Elementary_Results.csv", 'w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(headers)
+                    writer.writerows(elem_data)
             case "M":
                 with open("reports/Middle_Results.csv", 'w', newline='') as file:
                     writer = csv.writer(file)
@@ -60,6 +66,11 @@ def player_list():
     for d in divs:
         players = db_utils.get_players(d)
         match d:
+            case "E":
+                with open("reports/Elementary_Players.csv", 'w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(headers)
+                    writer.writerows(players)
             case "M":
                 with open("reports/Middle_Players.csv", 'w', newline='') as file:
                     writer = csv.writer(file)
@@ -81,6 +92,12 @@ def player_list():
 def generate_pdf():
     generate_folder()
     generate_csv()
+    if os.path.exists('reports/Elementary_Results.pdf'):
+        try:
+            os.remove('reports/Elementary_Results.pdf')
+        except IOError:
+            print("Error updating Elementary division file(s). Please close any open files and try again.")
+            os.system("pause")
     if os.path.exists('reports/Middle_Results.pdf'):
         try:
             os.remove('reports/Middle_Results.pdf')
@@ -99,6 +116,7 @@ def generate_pdf():
         except IOError:
             print("Error updating Senior division file(s). Please close any open files and try again.")
             os.system("pause")
+    convert('reports/Elementary_Results.csv', 'reports/Elementary_Results.pdf', orientation="L", headersize=8)
     convert('reports/Middle_Results.csv', 'reports/Middle_Results.pdf', orientation="L", headersize=8)
     convert('reports/Junior_Results.csv', 'reports/Junior_Results.pdf', orientation="L",headersize=8)
     convert('reports/Senior_Results.csv', 'reports/Senior_Results.pdf', orientation="L",headersize=8)
@@ -107,7 +125,6 @@ def generate_pdf():
 def game_reports():
     generate_folder()
     games = ["O","E","L","T","P","R","C"]
-    divisions = ["M","J","S"]
     for g in games:
         match g:
             case "O" | "E" | "L":
@@ -130,11 +147,19 @@ def game_reports():
                 elif g == "R":
                     game = "Presidents"
         results = db_utils.game_totals(g)
-        middle_results = results[0]
-        junior_results = results[1]
-        senior_results = results[2]
+        elem_results = results[0]
+        middle_results = results[1]
+        junior_results = results[2]
+        senior_results = results[3]
         for d in divisions:
             match d:
+                case "E":
+                    filename = f"reports/Elementary_{game}_Results.csv"
+                    with open(filename, 'w', newline='') as file:
+                        writer = csv.writer(file)
+                        writer.writerow(headers)
+                        writer.writerows(elem_results)
+
                 case "M":
                     filename = f"reports/Middle_{game}_Results.csv"
                     with open(filename, 'w', newline='') as file:

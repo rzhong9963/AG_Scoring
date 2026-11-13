@@ -202,7 +202,7 @@ def register_player():
     os.system('cls' if os.name == 'nt' else 'clear')
     print("=======Player Registration=======")
     fname, lname = input("Enter player's name: ").split()
-    div = input("Enter Division (M/J/S): ").upper()
+    div = input("Enter Division (E/M/J/S): ").upper()
     db_utils.register(fname, lname, div)
     cont = input("Do you want to register another player? (Y/N): ")
     match cont.upper():
