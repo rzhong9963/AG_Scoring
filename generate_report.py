@@ -61,9 +61,8 @@ def generate_csv():
 # Export Player List as CSV only. One file per division
 def player_list():
     generate_folder()
-    divs = ["M", "J", "S"]
     headers = ['ID', 'First Name', 'Last Name']
-    for d in divs:
+    for d in divisions:
         players = db_utils.get_players(d)
         match d:
             case "E":
