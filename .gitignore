@@ -2,4 +2,4 @@
 *.db*
 *.sqlite
 reports/
-*.pyc
+__pycache__/
