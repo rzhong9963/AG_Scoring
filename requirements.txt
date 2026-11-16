@@ -1,2 +1,0 @@
-csv2pdf
-pyside6
